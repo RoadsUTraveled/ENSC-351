@@ -1,0 +1,169 @@
+boxuan@351-debian:~$ ssh debian@192.168.7.2
+Debian GNU/Linux 11
+
+BeagleBoard.org Debian Bullseye Minimal Image 2022-11-01
+Support: https://bbb.io/debian
+default username:password is [debian:temppwd]
+
+debian@192.168.7.2's password: 
+ /$$ /$$ /$$
+| $$  /$ | $$          | $$                                                  
+| $$ /$$$| $$  /$$$$$$ | $$  /$$$$$$$  /$$$$$$  /$$$$$$/$$$$   /$$$$$$       
+| $$/$$ $$ $$ /$$__  $$| $$ /$$_____/ /$$__  $$| $$_  $$_  $$ /$$__  $$      
+| $$$$_  $$$$| $$$$$$$$| $$| $$      | $$  \ $$| $$ \ $$ \ $$| $$$$$$$$      
+| $$$/ \  $$$| $$_____/| $$| $$      | $$  | $$| $$ | $$ | $$| $$_____/      
+| $$/   \  $$|  $$$$$$$| $$|  $$$$$$$|  $$$$$$/| $$ | $$ | $$|  $$$$$$$      
+|__/     \__/ \_______/|__/ \_______/ \______/ |__/ |__/ |__/ \_______/      
+                                                                             
+                                                                             
+                                                                             
+ /$$$$$$$                                                                    
+| $$__  $$                                                                   
+| $$  \ $$  /$$$$$$  /$$   /$$ /$$   /$$  /$$$$$$  /$$$$$$$                  
+| $$$$$$$  /$$__  $$|  $$ /$$/| $$  | $$ |____  $$| $$__  $$                 
+| $$__  $$| $$  \ $$ \  $$$$/ | $$  | $$  /$$$$$$$| $$  \ $$                 
+| $$  \ $$| $$  | $$  >$$  $$ | $$  | $$ /$$__  $$| $$  | $$                 
+| $$$$$$$/|  $$$$$$/ /$$/\  $$|  $$$$$$/|  $$$$$$$| $$  | $$                 
+|_______/  \______/ |__/  \__/ \______/  \_______/|__/  |__/   
+Last login: Sun Nov 12 03:56:44 2023 from 192.168.7.1
+Hello embedded world, from Boxuan!
+
+Press the USER button to start the game...
+^C
+debian@boxuanlin-beagle:~$ ls
+hello  internetToTarget.sh
+debian@boxuanlin-beagle:~$ cd ../
+debian@boxuanlin-beagle:/home$ ls
+debian  mountNFS.sh
+debian@boxuanlin-beagle:/home$ ./mountNFS.sh 
+[sudo] password for debian: 
+debian@boxuanlin-beagle:/home$ cd ../
+debian@boxuanlin-beagle:/$ ls
+bin   dev  home    lib         media  opt   root  sbin  sys  usr
+boot  etc  ID.txt  lost+found  mnt    proc  run   srv   tmp  var
+debian@boxuanlin-beagle:/$ cd /mnt/remote
+debian@boxuanlin-beagle:/mnt/remote$ ls
+motd  mount-nfs.sh  myApps  nfs_message.txt
+debian@boxuanlin-beagle:/mnt/remote$ cd myApps/
+debian@boxuanlin-beagle:/mnt/remote/myApps$ ls
+noworky
+debian@boxuanlin-beagle:/mnt/remote/myApps$ ./noworky 
+noworky: by Brian Fraser
+Initial values: 
+  0: 000.0 --> 000.0
+  1: 002.0 --> 010.0
+  2: 004.0 --> 020.0
+  3: 006.0 --> 030.0
+  4: 008.0 --> 040.0
+  5: 010.0 --> 050.0
+  6: 012.0 --> 060.0
+  7: 014.0 --> 070.0
+  8: 016.0 --> 080.0
+  9: 018.0 --> 090.0
+Segmentation fault
+debian@boxuanlin-beagle:/mnt/remote/myApps$ gdbserver localhost:2001 noworky 
+Process /mnt/remote/myApps/noworky created; pid = 1234
+Listening on port 2001
+Remote debugging from host ::ffff:192.168.7.1, port 35262
+noworky: by Brian Fraser
+Initial values: 
+  0: 000.0 --> 000.0
+  1: 002.0 --> 010.0
+  2: 004.0 --> 020.0
+  3: 006.0 --> 030.0
+  4: 008.0 --> 040.0
+  5: 010.0 --> 050.0
+  6: 012.0 --> 060.0
+  7: 014.0 --> 070.0
+  8: 016.0 --> 080.0
+  9: 018.0 --> 090.0
+
+Child terminated with signal = 0xb (SIGSEGV)
+debian@boxuanlin-beagle:/mnt/remote/myApps$ gdbserver localhost:2001 noworky 
+Process /mnt/remote/myApps/noworky created; pid = 1243
+Listening on port 2001
+Remote debugging from host ::ffff:192.168.7.1, port 39622
+noworky: by Brian Fraser
+Initial values: 
+  0: 000.0 --> 000.0
+  1: 002.0 --> 010.0
+  2: 004.0 --> 020.0
+  3: 006.0 --> 030.0
+  4: 008.0 --> 040.0
+  5: 010.0 --> 050.0
+  6: 012.0 --> 060.0
+  7: 014.0 --> 070.0
+  8: 016.0 --> 080.0
+  9: 018.0 --> 090.0
+debian@boxuanlin-beagle:/mnt/remote/myApps$ gdbserver localhost:2001 noworky 
+Process /mnt/remote/myApps/noworky created; pid = 1249
+Listening on port 2001
+q
+Remote debugging from host ::ffff:192.168.7.1, port 38236
+debian@boxuanlin-beagle:/mnt/remote/myApps$ q
+-bash: q: command not found
+debian@boxuanlin-beagle:/mnt/remote/myApps$ ls
+noworky
+debian@boxuanlin-beagle:/mnt/remote/myApps$ cd ../
+debian@boxuanlin-beagle:/mnt/remote$ ls
+motd  mount-nfs.sh  myApps  nfs_message.txt
+debian@boxuanlin-beagle:/mnt/remote$ ./mount-nfs.sh 
+debian@boxuanlin-beagle:/mnt/remote$ cd myApps/
+debian@boxuanlin-beagle:/mnt/remote/myApps$ ls
+noworky
+debian@boxuanlin-beagle:/mnt/remote/myApps$ ./noworky 
+noworky: by Brian Fraser
+Initial values: 
+  0: 000.0 --> 000.0
+  1: 002.0 --> 010.0
+  2: 004.0 --> 020.0
+  3: 006.0 --> 030.0
+  4: 008.0 --> 040.0
+  5: 010.0 --> 050.0
+  6: 012.0 --> 060.0
+  7: 014.0 --> 070.0
+  8: 016.0 --> 080.0
+  9: 018.0 --> 090.0
+Final values: 
+  0: 000.0 --> 000.0
+  1: 010.0 --> 002.0
+  2: 020.0 --> 004.0
+  3: 030.0 --> 006.0
+  4: 040.0 --> 008.0
+  5: 050.0 --> 010.0
+  6: 060.0 --> 012.0
+  7: 070.0 --> 014.0
+  8: 080.0 --> 016.0
+  9: 090.0 --> 018.0
+Done.
+debian@boxuanlin-beagle:/mnt/remote/myApps$ gdbserver localhost:2001 noworky 
+Process /mnt/remote/myApps/noworky created; pid = 1274
+Listening on port 2001
+
+Remote debugging from host ::ffff:192.168.7.1, port 42826
+noworky: by Brian Fraser
+Initial values: 
+  0: 000.0 --> 000.0
+  1: 002.0 --> 010.0
+  2: 004.0 --> 020.0
+  3: 006.0 --> 030.0
+  4: 008.0 --> 040.0
+  5: 010.0 --> 050.0
+  6: 012.0 --> 060.0
+  7: 014.0 --> 070.0
+  8: 016.0 --> 080.0
+  9: 018.0 --> 090.0
+Final values: 
+  0: 000.0 --> 000.0
+  1: 010.0 --> 002.0
+  2: 020.0 --> 004.0
+  3: 030.0 --> 006.0
+  4: 040.0 --> 008.0
+  5: 050.0 --> 010.0
+  6: 060.0 --> 012.0
+  7: 070.0 --> 014.0
+  8: 080.0 --> 016.0
+  9: 090.0 --> 018.0
+Done.
+
+Child exited with status 0

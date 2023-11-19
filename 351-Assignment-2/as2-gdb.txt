@@ -1,0 +1,407 @@
+boxuan@351-debian:~$ ./internetToTarget.sh 
+1
+boxuan@351-debian:~$ ls
+cmpt433  Documents  helloworld.c         Music     Public     Videos
+Desktop  Downloads  internetToTarget.sh  Pictures  Templates
+boxuan@351-debian:~$ cd cmpt433/
+boxuan@351-debian:~/cmpt433$ ls
+public  work
+boxuan@351-debian:~/cmpt433$ cd work/
+boxuan@351-debian:~/cmpt433/work$ ls
+as1  as2  myApps
+boxuan@351-debian:~/cmpt433/work$ cd as2
+boxuan@351-debian:~/cmpt433/work/as2$ ls
+Makefile  noworky  noworky.c  noworky.o
+boxuan@351-debian:~/cmpt433/work/as2$ make clean
+rm -f noworky.o noworky
+boxuan@351-debian:~/cmpt433/work/as2$ make
+arm-linux-gnueabi-gcc  -Wall -g -std=c99 -D_POSIX_C_SOURCE=200809L -Werror -Wshadow -c noworky.c -o noworky.o
+arm-linux-gnueabi-gcc  -Wall -g -std=c99 -D_POSIX_C_SOURCE=200809L -Werror -Wshadow -o noworky noworky.o
+cp noworky /home/boxuan/cmpt433/public/myApps/
+boxuan@351-debian:~/cmpt433/work/as2$ gdb-multiarch noworky
+noworky    noworky.c  noworky.o  
+boxuan@351-debian:~/cmpt433/work/as2$ gdb-multiarch noworky
+GNU gdb (Debian 10.1-1.7) 10.1.90.20210103-git
+Copyright (C) 2021 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from noworky...
+(gdb) target remote 192.168.7.2:2001
+Remote debugging using 192.168.7.2:2001
+Reading /lib/ld-linux.so.3 from remote target...
+warning: File transfers from remote targets can be slow. Use "set sysroot" to access files locally instead.
+Reading /lib/ld-linux.so.3 from remote target...
+Reading symbols from target:/lib/ld-linux.so.3...
+Reading /lib/cdd3bebfff72062151d2b9262c1d6b241b3f0d.debug from remote target...
+Reading /lib/.debug/cdd3bebfff72062151d2b9262c1d6b241b3f0d.debug from remote target...
+Reading /usr/lib/debug//lib/cdd3bebfff72062151d2b9262c1d6b241b3f0d.debug from remote target...
+Reading /usr/lib/debug/lib//cdd3bebfff72062151d2b9262c1d6b241b3f0d.debug from remote target...
+Reading target:/usr/lib/debug/lib//cdd3bebfff72062151d2b9262c1d6b241b3f0d.debug from remote target...
+(No debugging symbols found in target:/lib/ld-linux.so.3)
+0xb6fd5a80 in ?? () from target:/lib/ld-linux.so.3
+(gdb) bt
+#0  0xb6fd5a80 in ?? () from target:/lib/ld-linux.so.3
+#1  0x00000000 in ?? ()
+Backtrace stopped: previous frame identical to this frame (corrupt stack?)
+(gdb) cont
+Continuing.
+Reading /lib/arm-linux-gnueabihf/libc.so.6 from remote target...
+Reading /lib/arm-linux-gnueabihf/89f19a899933c324c6f5dd41234f8ae757c9c4.debug from remote target...
+Reading /lib/arm-linux-gnueabihf/.debug/89f19a899933c324c6f5dd41234f8ae757c9c4.debug from remote target...
+Reading /usr/lib/debug//lib/arm-linux-gnueabihf/89f19a899933c324c6f5dd41234f8ae757c9c4.debug from remote target...
+Reading /usr/lib/debug/lib/arm-linux-gnueabihf//89f19a899933c324c6f5dd41234f8ae757c9c4.debug from remote target...
+Reading target:/usr/lib/debug/lib/arm-linux-gnueabihf//89f19a899933c324c6f5dd41234f8ae757c9c4.debug from remote target...
+
+Program received signal SIGSEGV, Segmentation fault.
+0x0040062c in swapContent (d1=0x411ff8, d2=0x412050 <completed>)
+    at noworky.c:19
+19		*d1 = tmp;
+(gdb) bt
+#0  0x0040062c in swapContent (d1=0x411ff8, d2=0x412050 <completed>)
+    at noworky.c:19
+#1  0x0040068c in tradeArrays (array1=0x413598, array2=0x4135f0, size=10)
+    at noworky.c:29
+#2  0x0040084c in main () at noworky.c:72
+(gdb) list
+14	 */
+15	void swapContent(double *d1, double *d2)
+16	{
+17		double tmp = *d2;
+18		*d2 = *d1;
+19		*d1 = tmp;
+20	}
+21	
+22	/*
+23	 * Swap the contents of the two arrays.
+(gdb) bt
+#0  0x0040062c in swapContent (d1=0x411ff8, d2=0x412050 <completed>)
+    at noworky.c:19
+#1  0x0040068c in tradeArrays (array1=0x413598, array2=0x4135f0, size=10)
+    at noworky.c:29
+#2  0x0040084c in main () at noworky.c:72
+(gdb) down
+Bottom (innermost) frame selected; you cannot go down.
+(gdb) up
+#1  0x0040068c in tradeArrays (array1=0x413598, array2=0x4135f0, size=10)
+    at noworky.c:29
+29			swapContent(array1+i, array2+i);
+(gdb) up
+#2  0x0040084c in main () at noworky.c:72
+72		tradeArrays(source, target, NUM_ELEMENTS);
+(gdb) list
+67		// Display them
+68		printf("Initial values: \n");
+69		displayArrays(source, target, NUM_ELEMENTS);
+70	
+71		// Swap their contents
+72		tradeArrays(source, target, NUM_ELEMENTS);
+73	
+74		// Display them
+75		printf("Final values: \n");
+76		displayArrays(source, target, NUM_ELEMENTS);
+(gdb) up
+Initial frame selected; you cannot go up.
+(gdb) bt
+#0  0x0040062c in swapContent (d1=0x411ff8, d2=0x412050 <completed>)
+    at noworky.c:19
+#1  0x0040068c in tradeArrays (array1=0x413598, array2=0x4135f0, size=10)
+    at noworky.c:29
+#2  0x0040084c in main () at noworky.c:72
+(gdb) list
+77	
+78		// Clean up.
+79		free(source);
+80		free(target);
+81	
+82		printf("Done.\n");
+83	
+84		return 0;
+85	}
+(gdb) bt
+#0  0x0040062c in swapContent (d1=0x411ff8, d2=0x412050 <completed>)
+    at noworky.c:19
+#1  0x0040068c in tradeArrays (array1=0x413598, array2=0x4135f0, size=10)
+    at noworky.c:29
+#2  0x0040084c in main () at noworky.c:72
+(gdb) up
+Initial frame selected; you cannot go up.
+(gdb) down
+#1  0x0040068c in tradeArrays (array1=0x413598, array2=0x4135f0, size=10)
+    at noworky.c:29
+29			swapContent(array1+i, array2+i);
+(gdb) list
+24	 */
+25	void tradeArrays(double *array1, double *array2, int size)
+26	{
+27		unsigned int i;
+28		for (i = size-1; i >= 0; i--) {
+29			swapContent(array1+i, array2+i);
+30		}
+31	}
+32	
+33	/*
+(gdb) bt 25
+#0  0x0040062c in swapContent (d1=0x411ff8, d2=0x412050 <completed>)
+    at noworky.c:19
+#1  0x0040068c in tradeArrays (array1=0x413598, array2=0x4135f0, size=10)
+    at noworky.c:29
+#2  0x0040084c in main () at noworky.c:72
+(gdb) b25
+Undefined command: "b25".  Try "help".
+(gdb) b 25
+Breakpoint 1 at 0x400658: file noworky.c, line 28.
+(gdb) cont
+Continuing.
+
+Program terminated with signal SIGSEGV, Segmentation fault.
+The program no longer exists.
+(gdb) q
+boxuan@351-debian:~/cmpt433/work/as2$ gdb-multiarch noworky
+GNU gdb (Debian 10.1-1.7) 10.1.90.20210103-git
+Copyright (C) 2021 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from noworky...
+(gdb) target remote 192.168.7.2:2001
+Remote debugging using 192.168.7.2:2001
+Reading /lib/ld-linux.so.3 from remote target...
+warning: File transfers from remote targets can be slow. Use "set sysroot" to access files locally instead.
+Reading /lib/ld-linux.so.3 from remote target...
+Reading symbols from target:/lib/ld-linux.so.3...
+Reading /lib/cdd3bebfff72062151d2b9262c1d6b241b3f0d.debug from remote target...
+Reading /lib/.debug/cdd3bebfff72062151d2b9262c1d6b241b3f0d.debug from remote target...
+Reading /usr/lib/debug//lib/cdd3bebfff72062151d2b9262c1d6b241b3f0d.debug from remote target...
+Reading /usr/lib/debug/lib//cdd3bebfff72062151d2b9262c1d6b241b3f0d.debug from remote target...
+Reading target:/usr/lib/debug/lib//cdd3bebfff72062151d2b9262c1d6b241b3f0d.debug from remote target...
+(No debugging symbols found in target:/lib/ld-linux.so.3)
+0xb6fd5a80 in ?? () from target:/lib/ld-linux.so.3
+(gdb) b 25
+Breakpoint 1 at 0x400658: file noworky.c, line 28.
+(gdb) cont
+Continuing.
+Reading /lib/arm-linux-gnueabihf/libc.so.6 from remote target...
+Reading /lib/arm-linux-gnueabihf/89f19a899933c324c6f5dd41234f8ae757c9c4.debug from remote target...
+Reading /lib/arm-linux-gnueabihf/.debug/89f19a899933c324c6f5dd41234f8ae757c9c4.debug from remote target...
+Reading /usr/lib/debug//lib/arm-linux-gnueabihf/89f19a899933c324c6f5dd41234f8ae757c9c4.debug from remote target...
+Reading /usr/lib/debug/lib/arm-linux-gnueabihf//89f19a899933c324c6f5dd41234f8ae757c9c4.debug from remote target...
+Reading target:/usr/lib/debug/lib/arm-linux-gnueabihf//89f19a899933c324c6f5dd41234f8ae757c9c4.debug from remote target...
+
+Breakpoint 1, tradeArrays (array1=0x413598, array2=0x4135f0, size=10)
+    at noworky.c:28
+28		for (i = size-1; i >= 0; i--) {
+(gdb) list
+23	 * Swap the contents of the two arrays.
+24	 */
+25	void tradeArrays(double *array1, double *array2, int size)
+26	{
+27		unsigned int i;
+28		for (i = size-1; i >= 0; i--) {
+29			swapContent(array1+i, array2+i);
+30		}
+31	}
+32	
+(gdb) print i
+$1 = 10
+(gdb) n
+29			swapContent(array1+i, array2+i);
+(gdb) n
+28		for (i = size-1; i >= 0; i--) {
+(gdb) print i
+$2 = 9
+(gdb) n
+29			swapContent(array1+i, array2+i);
+(gdb) n
+28		for (i = size-1; i >= 0; i--) {
+(gdb) print i
+$3 = 8
+(gdb) 
+$4 = 8
+(gdb) n
+29			swapContent(array1+i, array2+i);
+(gdb) 
+28		for (i = size-1; i >= 0; i--) {
+(gdb) 
+29			swapContent(array1+i, array2+i);
+(gdb) 
+28		for (i = size-1; i >= 0; i--) {
+(gdb) 
+29			swapContent(array1+i, array2+i);
+(gdb) 
+28		for (i = size-1; i >= 0; i--) {
+(gdb) 
+29			swapContent(array1+i, array2+i);
+(gdb) 
+28		for (i = size-1; i >= 0; i--) {
+(gdb) 
+29			swapContent(array1+i, array2+i);
+(gdb) 
+28		for (i = size-1; i >= 0; i--) {
+(gdb) 
+29			swapContent(array1+i, array2+i);
+(gdb) print i
+$5 = 2
+(gdb) n
+28		for (i = size-1; i >= 0; i--) {
+(gdb) n
+29			swapContent(array1+i, array2+i);
+(gdb) print i
+$6 = 1
+(gdb) n
+28		for (i = size-1; i >= 0; i--) {
+(gdb) print i
+$7 = 1
+(gdb) n
+29			swapContent(array1+i, array2+i);
+(gdb) n
+28		for (i = size-1; i >= 0; i--) {
+(gdb) print i
+$8 = 0
+(gdb) n
+29			swapContent(array1+i, array2+i);
+(gdb) n
+28		for (i = size-1; i >= 0; i--) {
+(gdb) print i
+$9 = 4294967295
+(gdb) list
+23	 * Swap the contents of the two arrays.
+24	 */
+25	void tradeArrays(double *array1, double *array2, int size)
+26	{
+27		unsigned int i;
+28		for (i = size-1; i >= 0; i--) {
+29			swapContent(array1+i, array2+i);
+30		}
+31	}
+32	
+(gdb) q
+A debugging session is active.
+
+	Inferior 1 [process 1243] will be killed.
+
+Quit anyway? (y or n) y
+boxuan@351-debian:~/cmpt433/work/as2$ gdb-multiarch noworky
+GNU gdb (Debian 10.1-1.7) 10.1.90.20210103-git
+Copyright (C) 2021 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from noworky...
+(gdb) q
+boxuan@351-debian:~/cmpt433/work/as2$ gdb-multiarch noworky
+GNU gdb (Debian 10.1-1.7) 10.1.90.20210103-git
+Copyright (C) 2021 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from noworky...
+(gdb) target remote 192.168.7.2:2001
+Remote debugging using 192.168.7.2:2001
+Reading /lib/ld-linux.so.3 from remote target...
+warning: File transfers from remote targets can be slow. Use "set sysroot" to access files locally instead.
+Reading /lib/ld-linux.so.3 from remote target...
+Reading symbols from target:/lib/ld-linux.so.3...
+Reading /lib/cdd3bebfff72062151d2b9262c1d6b241b3f0d.debug from remote target...
+Reading /lib/.debug/cdd3bebfff72062151d2b9262c1d6b241b3f0d.debug from remote target...
+Reading /usr/lib/debug//lib/cdd3bebfff72062151d2b9262c1d6b241b3f0d.debug from remote target...
+Reading /usr/lib/debug/lib//cdd3bebfff72062151d2b9262c1d6b241b3f0d.debug from remote target...
+Reading target:/usr/lib/debug/lib//cdd3bebfff72062151d2b9262c1d6b241b3f0d.debug from remote target...
+(No debugging symbols found in target:/lib/ld-linux.so.3)
+0xb6fd5a80 in ?? () from target:/lib/ld-linux.so.3
+(gdb) q
+A debugging session is active.
+
+	Inferior 1 [process 1249] will be killed.
+
+Quit anyway? (y or n) y
+boxuan@351-debian:~/cmpt433/work/as2$ ls
+Makefile  noworky  noworky.c  noworky.o
+boxuan@351-debian:~/cmpt433/work/as2$ make clean
+rm -f noworky.o noworky
+boxuan@351-debian:~/cmpt433/work/as2$ make
+arm-linux-gnueabi-gcc  -Wall -g -std=c99 -D_POSIX_C_SOURCE=200809L -Werror -Wshadow -c noworky.c -o noworky.o
+arm-linux-gnueabi-gcc  -Wall -g -std=c99 -D_POSIX_C_SOURCE=200809L -Werror -Wshadow -o noworky noworky.o
+cp noworky /home/boxuan/cmpt433/public/myApps/
+boxuan@351-debian:~/cmpt433/work/as2$ gdb-multiarch noworky
+GNU gdb (Debian 10.1-1.7) 10.1.90.20210103-git
+Copyright (C) 2021 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from noworky...
+(gdb) target remote 192.168.7.2:2001
+Remote debugging using 192.168.7.2:2001
+Reading /lib/ld-linux.so.3 from remote target...
+warning: File transfers from remote targets can be slow. Use "set sysroot" to access files locally instead.
+Reading /lib/ld-linux.so.3 from remote target...
+Reading symbols from target:/lib/ld-linux.so.3...
+Reading /lib/cdd3bebfff72062151d2b9262c1d6b241b3f0d.debug from remote target...
+Reading /lib/.debug/cdd3bebfff72062151d2b9262c1d6b241b3f0d.debug from remote target...
+Reading /usr/lib/debug//lib/cdd3bebfff72062151d2b9262c1d6b241b3f0d.debug from remote target...
+Reading /usr/lib/debug/lib//cdd3bebfff72062151d2b9262c1d6b241b3f0d.debug from remote target...
+Reading target:/usr/lib/debug/lib//cdd3bebfff72062151d2b9262c1d6b241b3f0d.debug from remote target...
+(No debugging symbols found in target:/lib/ld-linux.so.3)
+0xb6fd5a80 in ?? () from target:/lib/ld-linux.so.3
+(gdb) cont
+Continuing.
+Reading /lib/arm-linux-gnueabihf/libc.so.6 from remote target...
+Reading /lib/arm-linux-gnueabihf/89f19a899933c324c6f5dd41234f8ae757c9c4.debug from remote target...
+Reading /lib/arm-linux-gnueabihf/.debug/89f19a899933c324c6f5dd41234f8ae757c9c4.debug from remote target...
+Reading /usr/lib/debug//lib/arm-linux-gnueabihf/89f19a899933c324c6f5dd41234f8ae757c9c4.debug from remote target...
+Reading /usr/lib/debug/lib/arm-linux-gnueabihf//89f19a899933c324c6f5dd41234f8ae757c9c4.debug from remote target...
+Reading target:/usr/lib/debug/lib/arm-linux-gnueabihf//89f19a899933c324c6f5dd41234f8ae757c9c4.debug from remote target...
+[Inferior 1 (process 1274) exited normally]
+(gdb) q
+boxuan@351-debian:~/cmpt433/work/as2$ 
+
