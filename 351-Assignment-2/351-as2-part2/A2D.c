@@ -4,8 +4,8 @@
 #include "common.h"
 #include "A2D.h"
 
-static const double A2D_VOLTAGE_REF_V 1.8
-static const int A2D_MAX_READING 4095
+static const double A2D_VOLTAGE_REF_V = 1.8;
+static const int A2D_MAX_READING = 4095;
 #define ADC_PATH "/sys/bus/iio/devices/iio:device0/in_voltage%d_raw"
 
 int getVoltageReading(int channel) {
