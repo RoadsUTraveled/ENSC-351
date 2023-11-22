@@ -5,4 +5,4 @@
 void runCommand(char *command);
 void sleepForMs(long long delayInMs);
 
-#endif // A2D
+#endif /* common_h */
