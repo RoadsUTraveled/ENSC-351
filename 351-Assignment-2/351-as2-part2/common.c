@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+
 #include "common.h"
 
 void runCommand(char *command)
@@ -33,3 +34,4 @@ void sleepForMs(long long delayInMs)
     struct timespec reqDelay = {seconds, nanoseconds};
     nanosleep(&reqDelay, (struct timespec *)NULL);
 }
+
