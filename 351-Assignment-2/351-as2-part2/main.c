@@ -16,8 +16,8 @@
 int main() {
     // test the A2D functions
     while (true) {
-        int reading = getVoltageReading(2);
-        double voltage = getVoltage(2);
+        int reading = getVoltageReading(3);
+        double voltage = getVoltage(3);
         printf("Reading: %d, Voltage: %f\n", reading, voltage);
     }
 

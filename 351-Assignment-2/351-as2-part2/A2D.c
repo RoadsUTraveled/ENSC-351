@@ -30,7 +30,7 @@ int getVoltageReading(int channel) {
 }
 
 double getVoltage(int channel) {
-    int a2dReading = getVoltageReading(channel);
+    double a2dReading = getVoltageReading(channel);
     double voltage = a2dReading * A2D_VOLTAGE_REF_V / A2D_MAX_READING;
     return voltage;
 }
