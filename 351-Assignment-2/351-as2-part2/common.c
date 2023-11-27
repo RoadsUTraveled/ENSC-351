@@ -34,3 +34,12 @@ void sleepForMs(long long delayInMs)
     struct timespec reqDelay = {seconds, nanoseconds};
     nanosleep(&reqDelay, (struct timespec *)NULL);
 }
+
+long long getTimeInMs(void) {
+    struct timespec spec;
+    clock_gettime(CLOCK_REALTIME, &spec);
+    long long seconds = spec.tv_sec;
+    long long nanoSeconds = spec.tv_nsec;
+    long long milliSeconds = seconds * 1000 + nanoSeconds / 1000000;
+    return milliSeconds;
+}
