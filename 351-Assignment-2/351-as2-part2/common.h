@@ -9,6 +9,6 @@
 void runCommand(char *command);
 void sleepForMs(long long delayInMs);
 long long getTimeInMs(void);
-
+long long getTimeInMicros(void);
 
 #endif /* common_h */
