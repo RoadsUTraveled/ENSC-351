@@ -53,11 +53,11 @@ DigitPattern ninePatternR = {
 };
 
 DigitPattern dotPattern = {
-    {{0x00, 0x08}}
+    {{0x00, 0x08},{0x02, 0x00}, {0x04, 0x00}, {0x06, 0x00}, {0x08, 0x00}, {0x0a, 0x00}, {0x0c, 0x00}}
 };
 
 DigitPattern blankPattern = {
-    {{0x02, 0x00}, {0x04, 0x00}, {0x06, 0x0}, {0x08, 0x00}, {0x0a, 0x00}, {0x0c, 0x00}, {0x0e, 0x00}}
+    {{0x02, 0x00}, {0x04, 0x00}, {0x06, 0x00}, {0x08, 0x00}, {0x0a, 0x00}, {0x0c, 0x00}, {0x0e, 0x00}}
 };
 
 DigitPattern zeroPatternL = {
@@ -134,39 +134,61 @@ void gpioWrite(int gpio, int value) {
     // Close the file
     close(fd);
 }
-void setDisplayPatterns(int number, DigitPattern *leftDigit, DigitPattern *rightDigit) {
+void setDisplayPatterns(double number, DigitPattern *leftDigit, DigitPattern *rightDigit, DigitPattern *dot) {
     DigitPattern digitPatternsR[10] = {zeroPatternR, onePatternR, twoPatternR, threePatternR, fourPatternR, fivePatternR, sixPatternR, sevenPatternR, eightPatternR, ninePatternR};
     DigitPattern digitPatternsL[10] = {zeroPatternL, onePatternL, twoPatternL, threePatternL, fourPatternL, fivePatternL, sixPatternL, sevenPatternL, eightPatternL, ninePatternL};
-
-    if (number < 0) {
+    
+    if (number < 0.0) {
         fprintf(stderr, "Error: Number is less than 0\n");
         exit(EXIT_FAILURE);
     }
-    if (number > 99) {
-        number = 99;
+
+     // Cap for integers and doubles
+    if (number > 99.0) {
+        number = 99.0;
     }
-    if (number <= 9){
-         // For numbers <= 9, display only on the right digit
-        *leftDigit = blankPattern; // Set the left digit to a blank or empty pattern
-        *rightDigit = digitPatternsR[number];
-    }else{
-        int leftNum = number / 10;
-        int rightNum = number % 10;
-        *leftDigit = digitPatternsL[leftNum];
-        *rightDigit = digitPatternsR[rightNum];
+    if (number > 9.9 && number != (double)((int)number)) {
+        number = 9.9;
     }
 
+    // Handling double numbers (0.0 to 9.9)
+    if (number < 10.0 && number != (double)((int)number)) {
+        int integerPart = (int)number;
+        int decimalPart = (int)(number * 10) % 10;
+
+        *leftDigit = digitPatternsL[integerPart];
+        *rightDigit = digitPatternsR[decimalPart];
+        *dot = dotPattern;
+    } else {
+        // Handling integer numbers (0 to 99)
+        int num = (int)number;
+        if (num <= 9) {
+            *leftDigit = blankPattern;
+            *rightDigit = digitPatternsR[num];
+            *dot = blankPattern;
+        } else {
+            int leftNum = num / 10;
+            int rightNum = num % 10;
+            *leftDigit = digitPatternsL[leftNum];
+            *rightDigit = digitPatternsR[rightNum];
+            *dot = blankPattern;
+        }
+    
+    }
+    
+    
     
 }
 
+
 void* displayThreadFunc(void* arg) {
     ThreadArg* threadArg = (ThreadArg*)arg;
-    int number = threadArg->number;
+    double number = threadArg->number;
     int i2cFileDesc = threadArg->i2cFileDesc;
 
-    DigitPattern leftPattern, rightPattern;
-    setDisplayPatterns(number, &leftPattern, &rightPattern);
-
+    DigitPattern leftPattern, rightPattern, dot;
+    setDisplayPatterns(number, &leftPattern, &rightPattern, &dot);
+    
     while (1) {
         // Turn off both digits
         gpioWrite(61, 0);
@@ -189,6 +211,7 @@ void* displayThreadFunc(void* arg) {
         // Turn on right digit
         gpioWrite(44, 1);
         sleepForMs(5); // 5ms delay
+        displayDigit(i2cFileDesc, dot);  // Will display dot or blank
     }
     return NULL;
 }
@@ -241,6 +264,48 @@ unsigned char readI2cReg(int i2cFileDesc, unsigned char regAddr)
 	return value;
 }
 
+int ledInitialize() {
+    // Configure I2C and GPIO pins
+    runCommand("config-pin P9_18 i2c");
+    runCommand("config-pin P9_17 i2c");
+    
+    runCommand("config-pin p8.26 gpio");
+    runCommand("config-pin p8.12 gpio");
+
+    // Export GPIO pins and set direction
+    runCommand("cd /sys/class/gpio");
+    sleep(1);
+    runCommand("echo 61 > /sys/class/gpio/export");
+    sleep(1);
+    runCommand("echo out > /sys/class/gpio/gpio61/direction");
+    sleep(1);
+    runCommand("echo 44 > /sys/class/gpio/export");
+    sleep(1);
+    runCommand("echo out > /sys/class/gpio/gpio44/direction");
+
+    printf("Drive display (assumes GPIO #61 and #44 are output and 1)\n");
+
+    // Initialize the I2C bus
+    int i2cFileDesc = initI2cBus(I2CDRV_LINUX_BUS1, I2C_DEVICE_ADDRESS);
+
+    // Set direction of I2C GPIO extender ports to be outputs
+    writeI2cReg(i2cFileDesc, REG_DIRA, 0x00);
+    writeI2cReg(i2cFileDesc, REG_DIRB, 0x00);
+
+    // Drive an hour-glass looking character (Like an X with a bar on top & bottom)
+    writeI2cReg(i2cFileDesc, REG_OUTA, 0x2A);
+    writeI2cReg(i2cFileDesc, REG_OUTB, 0x54);
+
+    // Read and print a register for verification
+    unsigned char regVal = readI2cReg(i2cFileDesc, REG_OUTA);
+    printf("Reg OUT-A = 0x%02x\n", regVal);
+
+    // Additional I2C register configurations
+    writeI2cReg(i2cFileDesc, 0x21, 0x00);
+    writeI2cReg(i2cFileDesc, 0x81, 0x00);
+
+    return i2cFileDesc;
+}
 
 
 /*

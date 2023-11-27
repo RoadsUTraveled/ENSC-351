@@ -25,7 +25,7 @@ typedef struct {
 } DigitPattern;
 
 typedef struct {
-    int number;
+    double number;
     int i2cFileDesc;
 } ThreadArg;
 
@@ -35,7 +35,8 @@ void writeI2cReg(int i2cFileDesc, unsigned char regAddr, unsigned char value);
 unsigned char readI2cReg(int i2cFileDesc, unsigned char regAddr);
 void displayDigit(int i2cFileDesc, DigitPattern digit);
 void gpioWrite(int gpio, int value);
-void setDisplayPatterns(int number, DigitPattern *leftDigit, DigitPattern *rightDigit);
+void setDisplayPatterns(double number, DigitPattern *leftDigit, DigitPattern *rightDigit, DigitPattern*dot);
 void* displayThreadFunc(void* arg);
+int ledInitialize();
 
 #endif // SEGDISPLAY_H
