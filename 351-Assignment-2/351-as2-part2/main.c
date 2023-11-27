@@ -71,7 +71,7 @@ int main() {
 
     // Initialize the thread argument
     ThreadArg threadArg;
-    threadArg.number = 22;  // Change the number here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (work for only int now)
+    threadArg.number = 0;  // Change the number here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (work for only int now)
     threadArg.i2cFileDesc = i2cFileDesc;
 
     // Create the display thread

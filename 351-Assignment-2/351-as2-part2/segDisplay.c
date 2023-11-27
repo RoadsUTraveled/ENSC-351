@@ -56,6 +56,10 @@ DigitPattern dotPattern = {
     {{0x00, 0x08}}
 };
 
+DigitPattern blankPattern = {
+    {{0x02, 0x00}, {0x04, 0x00}, {0x06, 0x0}, {0x08, 0x00}, {0x0a, 0x00}, {0x0c, 0x00}, {0x0e, 0x00}}
+};
+
 DigitPattern zeroPatternL = {
     {{0x02, 0x07<<4}, {0x0e, 0x07<<4}, {0x04, 0x05<<4}, {0x06, 0x05<<4}, {0x08, 0x05<<4}, {0x0a, 0x05<<4}, {0x0c, 0x05<<4}}
 };
@@ -141,12 +145,18 @@ void setDisplayPatterns(int number, DigitPattern *leftDigit, DigitPattern *right
     if (number > 99) {
         number = 99;
     }
+    if (number <= 9){
+         // For numbers <= 9, display only on the right digit
+        *leftDigit = blankPattern; // Set the left digit to a blank or empty pattern
+        *rightDigit = digitPatternsR[number];
+    }else{
+        int leftNum = number / 10;
+        int rightNum = number % 10;
+        *leftDigit = digitPatternsL[leftNum];
+        *rightDigit = digitPatternsR[rightNum];
+    }
 
-    int leftNum = number / 10;
-    int rightNum = number % 10;
-
-    *leftDigit = digitPatternsL[leftNum];
-    *rightDigit = digitPatternsR[rightNum];
+    
 }
 
 void* displayThreadFunc(void* arg) {
