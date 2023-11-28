@@ -32,67 +32,67 @@ int main() {
     }*/
 
 
-    // //test for LED
-    // runCommand("config-pin P9_18 i2c");
-    // runCommand("config-pin P9_17 i2c");
+    //test for LED
+    runCommand("config-pin P9_18 i2c");
+    runCommand("config-pin P9_17 i2c");
     
-    // runCommand("config-pin p8.26 gpio");
-    // runCommand("config-pin p8.12 gpio");
-    // runCommand("cd /sys/class/gpio");
-    // sleep(1);
-    // runCommand("echo 61 > /sys/class/gpio/export");
-    // sleep(1);
-    // runCommand("echo out > /sys/class/gpio/gpio61/direction");
-    // sleep(1);
-    // runCommand("echo 44 > /sys/class/gpio/export");
-    // sleep(1);
-    // runCommand("echo out > /sys/class/gpio/gpio44/direction");
+    runCommand("config-pin p8.26 gpio");
+    runCommand("config-pin p8.12 gpio");
+    runCommand("cd /sys/class/gpio");
+    sleep(1);
+    runCommand("echo 61 > /sys/class/gpio/export");
+    sleep(1);
+    runCommand("echo out > /sys/class/gpio/gpio61/direction");
+    sleep(1);
+    runCommand("echo 44 > /sys/class/gpio/export");
+    sleep(1);
+    runCommand("echo out > /sys/class/gpio/gpio44/direction");
 
-	// printf("Drive display (assumes GPIO #61 and #44 are output and 1\n");
-	// int i2cFileDesc = initI2cBus(I2CDRV_LINUX_BUS1, I2C_DEVICE_ADDRESS);
+	printf("Drive display (assumes GPIO #61 and #44 are output and 1\n");
+	int i2cFileDesc = initI2cBus(I2CDRV_LINUX_BUS1, I2C_DEVICE_ADDRESS);
 
     
-	// writeI2cReg(i2cFileDesc, REG_DIRA, 0x00);
-	// writeI2cReg(i2cFileDesc, REG_DIRB, 0x00);
+	writeI2cReg(i2cFileDesc, REG_DIRA, 0x00);
+	writeI2cReg(i2cFileDesc, REG_DIRB, 0x00);
 
-	// // Drive an hour-glass looking character (Like an X with a bar on top & bottom)
-	// writeI2cReg(i2cFileDesc, REG_OUTA, 0x2A);
-	// writeI2cReg(i2cFileDesc, REG_OUTB, 0x54);
+	// Drive an hour-glass looking character (Like an X with a bar on top & bottom)
+	writeI2cReg(i2cFileDesc, REG_OUTA, 0x2A);
+	writeI2cReg(i2cFileDesc, REG_OUTB, 0x54);
     
 
-	// // Read a register:
-	// unsigned char regVal = readI2cReg(i2cFileDesc, REG_OUTA);
-	// printf("Reg OUT-A = 0x%02x\n", regVal);
+	// Read a register:
+	unsigned char regVal = readI2cReg(i2cFileDesc, REG_OUTA);
+	printf("Reg OUT-A = 0x%02x\n", regVal);
 
-    // writeI2cReg(i2cFileDesc, 0x21, 0x00);
-    // writeI2cReg(i2cFileDesc, 0x81, 0x00);
+    writeI2cReg(i2cFileDesc, 0x21, 0x00);
+    writeI2cReg(i2cFileDesc, 0x81, 0x00);
 
-    // // Initialize the thread argument
-    // ThreadArg threadArg;
-    // threadArg.number = 0;  // Change the number here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (work for only int now)
-    // threadArg.i2cFileDesc = i2cFileDesc;
+    // Initialize the thread argument
+    ThreadArg threadArg;
+    threadArg.number = 0;  // Change the number here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! (work for only int now)
+    threadArg.i2cFileDesc = i2cFileDesc;
 
-    // // Create the display thread
-    // pthread_t displayThread;
-    // if (pthread_create(&displayThread, NULL, displayThreadFunc, &threadArg)) {
-    //     fprintf(stderr, "Error creating display thread\n");
-    //     return 1;
-    // }
-
-    // // Wait for the thread to finish
-    // pthread_join(displayThread, NULL);
-
-    // // Cleanup I2C access
-    // close(i2cFileDesc);
-
-
-    //test for joystick
-
-    while (true) {
-        double x, y;
-        Joystick_readXY(&x, &y);
-        printf("x: %f, y: %f\n", x, y);
+    // Create the display thread
+    pthread_t displayThread;
+    if (pthread_create(&displayThread, NULL, displayThreadFunc, &threadArg)) {
+        fprintf(stderr, "Error creating display thread\n");
+        return 1;
     }
+
+    // Wait for the thread to finish
+    pthread_join(displayThread, NULL);
+
+    // Cleanup I2C access
+    close(i2cFileDesc);
+
+
+    /**********************test for joystick******************/
+
+    // while (true) {
+    //     double x, y;
+    //     Joystick_readXY(&x, &y);
+    //     printf("x: %f, y: %f\n", x, y);
+    // }
     
     return 0;
 }
