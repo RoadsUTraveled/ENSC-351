@@ -11,6 +11,7 @@
 #include "user_button_exit.h"
 #include "A2D.h"
 #include "segDisplay.h"
+#include "user_button_exit.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,6 +23,9 @@
 #include <pthread.h>
 #include <unistd.h> 
 
+
+//pthread_mutex_t mutex; // Declare the mutex globally
+
 int main() {
     // test the A2D functions
     /*
@@ -31,25 +35,37 @@ int main() {
         printf("Reading: %d, Voltage: %f\n", reading, voltage);
     }*/
 
+    // Initialize the mutex
+    //pthread_mutex_init(&mutex, NULL);
+
     //LED test
+    int i2cFileDesc = ledOpen(0.8);
+
+    /*
     int i2cFileDesc = ledInitialize();
     // Initialize the thread argument
     ThreadArg threadArg;
-    threadArg.number = 100;  // Change the number here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
+    threadArg.number = 8.8;  // Change the number here!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 
     threadArg.i2cFileDesc = i2cFileDesc;
 
     // Create the display thread
-    pthread_t displayThread;
+    pthread_t displayThread, buttonMonitorThread;
     if (pthread_create(&displayThread, NULL, displayThreadFunc, &threadArg)) {
         fprintf(stderr, "Error creating display thread\n");
         return 1;
     }
+    pthread_create(&buttonMonitorThread, NULL, buttonMonitorThreadFunc, NULL);*/
 
     // Wait for the thread to finish
-    pthread_join(displayThread, NULL);
-
+    //pthread_join(displayThread, NULL);
+    //pthread_join(buttonMonitorThread, NULL);
     // Cleanup I2C access
+    //sleep(5);
+    //ledClose();
+    controlButtonMonitorThread();
     close(i2cFileDesc);
-    
+    printf("Program exiting smoothly.\n");
+
+   
     return 0;
 }

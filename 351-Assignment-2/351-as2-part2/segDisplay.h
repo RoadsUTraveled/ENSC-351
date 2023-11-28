@@ -15,13 +15,15 @@
 #define REG_OUTA 0x14
 #define REG_OUTB 0x15
 
+extern volatile int displayThreadRunning;
+
 typedef struct {
     unsigned char regAddr;
     unsigned char value;
 } SegmentPattern;
 
 typedef struct {
-    SegmentPattern patterns[7];
+    SegmentPattern patterns[8];
 } DigitPattern;
 
 typedef struct {
@@ -38,5 +40,7 @@ void gpioWrite(int gpio, int value);
 void setDisplayPatterns(double number, DigitPattern *leftDigit, DigitPattern *rightDigit, DigitPattern*dot);
 void* displayThreadFunc(void* arg);
 int ledInitialize();
+int ledOpen(double numberToShow);
+void ledClose();
 
 #endif // SEGDISPLAY_H
