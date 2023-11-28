@@ -44,10 +44,16 @@ double getVoltage0Reading()
 }
 
 void* samplingFunction(void* arg) {
+    long long startTime = getTimeInMicros();    
+    long long currentTime = 0;
+    long long timeelapsed = 0;
+
     while (running) {
         pthread_mutex_lock(&mutex);
+        currentTime = getTimeInMicros();
+        timeelapsed = currentTime - startTime;
 
-        if (sampleCount < MAX_SAMPLES) {
+        if (sampleCount < MAX_SAMPLES && timeelapsed <= 1000) {
             samplerDatapoint_t newSample;
             newSample.sampleInV = getVoltage0Reading();
             newSample.timestampInNanoS = getTimeInMicros();
