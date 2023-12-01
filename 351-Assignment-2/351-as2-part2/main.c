@@ -35,6 +35,7 @@ int main() {
         double voltage = getVoltage(3);
         printf("Reading: %d, Voltage: %f\n", reading, voltage);
     }*/
+
     Sampler_startSampling();
     resetSampleAnalysis();
     //LED test
@@ -52,5 +53,6 @@ int main() {
     //     printf("x: %f, y: %f\n", x, y);
     // }
 
+   
     return 0;
 }
