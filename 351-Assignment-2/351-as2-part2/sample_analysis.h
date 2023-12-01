@@ -9,7 +9,9 @@
 void cleanup_sample_analysis(void);
 
 void* sampleAnalysisThreadFunc(void* arg);
-void init_sample_analysis(void);
+void resetSampleAnalysis(void);
+
+void computeStatistics(samplerDatapoint_t* samples, int length);
 
 //printer ffuntions
 void printSampleAnalysis(void);
