@@ -59,7 +59,7 @@ int main() {
     cleanup_sample_analysis();
 
     // Print the analysis results
-    printf("Analysis Results:\n");
+    printf("Shutting down...\n");
     printSampleAnalysis();
 
     return 0;
