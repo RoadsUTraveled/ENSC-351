@@ -10,6 +10,8 @@
 #include <stdbool.h>
 #include <pthread.h>
 #include <unistd.h> 
+#include "sampler.h"
+#include "sample_analysis.h"
 
 int readButton(void) {
     char command[256];
@@ -36,6 +38,8 @@ void* buttonMonitorThreadFunc(void* arg) {
             exitRequested = true;
             printf("pressed button\n");
             ledClose();
+            Sampler_stopSampling();
+            cleanup_sample_analysis();
             break;
         }
         struct timespec req, rem;

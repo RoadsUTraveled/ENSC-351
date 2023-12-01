@@ -12,7 +12,7 @@
 #include <pthread.h>
 #include <unistd.h>  // For usleep
 
-volatile int displayThreadRunning = 1;
+volatile int displayThreadRunning = 0;
 pthread_mutex_t mutex;
 pthread_t displayThread; // Global declaration
 ThreadArg* globalThreadArg = NULL;  // Global variable to hold the thread argument
@@ -266,17 +266,59 @@ unsigned char readI2cReg(int i2cFileDesc, unsigned char regAddr)
 		perror("Unable to write i2c register.");
 		exit(-1);
 	}
+    char value = 0;
+    res = read(i2cFileDesc, &value, sizeof(value));
+    if (res != sizeof(value)) {
+        perror("I2C: Unable to read from i2c register");
+        exit(1);    
+    }
+    return value;
+}
 
-	// Now read the value and return it
-	char value = 0;
-	res = read(i2cFileDesc, &value, sizeof(value));
+
+/*
+int ledOpen(double numberToShow) {
+        // LED initialization
+    int i2cFileDesc = ledInitialize();
+
+    // Initialize the thread argument
+    ThreadArg threadArg;
+    threadArg.number = numberToShow;  
+    threadArg.i2cFileDesc = i2cFileDesc;
+
+    // Create the display thread
+    pthread_mutex_init(&mutex, NULL);
+    if (pthread_create(&displayThread, NULL, displayThreadFunc, &threadArg)) {
+        fprintf(stderr, "Error creating display thread\n");
+        return -1;  // Return an error code
+    }
+ 
+    pthread_join(displayThread, NULL);
+    return i2cFileDesc;
+}
+
+
+void ledClose(){
+    //sleep(5);
+    // Signal the thread to exit
+    pthread_mutex_lock(&mutex);
+    displayThreadRunning = 0;
+    pthread_mutex_unlock(&mutex);
+
+    // Wait for the thread to finish
+    //pthread_join(displayThread, NULL);
+
+    // Destroy the mutex
+    pthread_mutex_destroy(&mutex);
+}
+
 	if (res != sizeof(value)) {
 		perror("Unable to read i2c register");
 		exit(-1);
 	}
 	return value;
 }
-
+*/
 int ledInitialize() {
     // Configure I2C and GPIO pins
     runCommand("config-pin P9_18 i2c");
@@ -357,6 +399,7 @@ void ledClose(){
 }
 */
 int ledOpen(double numberToShow) {
+    displayThreadRunning = 1;
     // LED initialization
     int i2cFileDesc = ledInitialize();
 

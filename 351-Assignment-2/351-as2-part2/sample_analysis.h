@@ -4,6 +4,8 @@
 #ifndef SAMPLE_ANALYSIS_H
 #define SAMPLE_ANALYSIS_H
 
+#include "sampler.h"
+
 // Thread initialization and cleanup functions
 
 void cleanup_sample_analysis(void);
