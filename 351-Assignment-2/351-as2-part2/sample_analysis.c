@@ -204,14 +204,20 @@ void printSampleAnalysis(void)
 {
     pthread_mutex_lock(&sampleAnalysisMutex);
 
-    printf("Average Voltage: %.3f V\n", sampleAnalysis.avgVoltage);
-    printf("Minimum Voltage: %.3f V\n", sampleAnalysis.minVoltage);
-    printf("Maximum Voltage: %.3f V\n", sampleAnalysis.maxVoltage);
-    printf("Average Interval: %.3f us\n", sampleAnalysis.avgInterval);
-    printf("Minimum Interval: %.3f us\n", sampleAnalysis.minInterval);
-    printf("Maximum Interval: %.3f us\n", sampleAnalysis.maxInterval);
-    printf("Number of Samples: %d\n", sampleAnalysis.numSamples);
-    printf("Number of Dips: %d\n", sampleAnalysis.numDips);
+    printf("Interval ms (%.3f, %.3f) avg=%.3f   ", 
+           sampleAnalysis.minInterval / 1000.0,  // Converting nanoseconds to milliseconds
+           sampleAnalysis.maxInterval / 1000.0, 
+           sampleAnalysis.avgInterval / 1000.0);
+
+    printf("Samples V (%.3f, %.3f) avg=%.3f   ", 
+           sampleAnalysis.minVoltage, 
+           sampleAnalysis.maxVoltage, 
+           sampleAnalysis.avgVoltage);
+
+    printf("# Dips: %d   # Samples: %d", 
+           sampleAnalysis.numDips, 
+           sampleAnalysis.numSamples);
 
     pthread_mutex_unlock(&sampleAnalysisMutex);
 }
+
