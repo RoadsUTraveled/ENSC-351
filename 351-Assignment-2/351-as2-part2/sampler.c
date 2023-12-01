@@ -6,6 +6,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include "common.h"
+#include <time.h>
 
 #define A2D_FILE_VOLTAGE0 "/sys/bus/iio/devices/iio:device0/in_voltage1_raw"
 #define A2D_VOLTAGE_REF_V 1.8
@@ -21,7 +22,7 @@ static pthread_mutex_t mutex;
 static pthread_t samplerThread;
 static int running = 0;
 
-double getVoltage0Reading()
+double getVoltage1Reading()
 {
     // Open file
     FILE *f = fopen(A2D_FILE_VOLTAGE0, "r");
@@ -44,27 +45,41 @@ double getVoltage0Reading()
 }
 
 void* samplingFunction(void* arg) {
-    long long startTime = getTimeInMicros();    
-    long long currentTime = 0;
-    long long timeelapsed = 0;
-
     while (running) {
+        long long startTimeInMicros = getTimeInMicros();
+        long long currentTimeInMicros;
+
         pthread_mutex_lock(&mutex);
-        currentTime = getTimeInMicros();
-        timeelapsed = currentTime - startTime;
-
-        if (sampleCount < MAX_SAMPLES && timeelapsed <= 1000) {
-            samplerDatapoint_t newSample;
-            newSample.sampleInV = getVoltage0Reading();
-            newSample.timestampInNanoS = getTimeInMicros();
-            sampleHistory[sampleCount++] = newSample;
-            totalSamples++;
-        }
-
+        sampleCount = 0;
         pthread_mutex_unlock(&mutex);
+
+        struct timespec req, rem;
+        req.tv_sec = 0;
+        req.tv_nsec = 1000 * 1000; // 1ms in nanoseconds
+
+        do {
+            pthread_mutex_lock(&mutex);
+
+            if (sampleCount < MAX_SAMPLES) {
+                samplerDatapoint_t newSample;
+                newSample.sampleInV = getVoltage1Reading();
+                newSample.timestampInNanoS = getTimeInMicros();
+                sampleHistory[sampleCount++] = newSample;
+                
+            }
+
+            pthread_mutex_unlock(&mutex);
+
+            nanosleep(&req, &rem);  // Sleep for 1ms
+
+            currentTimeInMicros = getTimeInMicros();
+
+        } while (currentTimeInMicros - startTimeInMicros < 1000000); // 1 second
     }
+    
     return NULL;
 }
+
 
 void Sampler_startSampling(void) {
     running = 1;
@@ -100,4 +115,10 @@ int Sampler_getNumSamplesInHistory() {
 long long Sampler_getNumSamplesTaken(void) {
     return totalSamples; // Assuming this doesn't need to be thread-safe
 }
+void Sampler_resetSampleCount(void) {
+    pthread_mutex_lock(&mutex);
+    sampleCount = 0;
+    pthread_mutex_unlock(&mutex);
+}
+
 
