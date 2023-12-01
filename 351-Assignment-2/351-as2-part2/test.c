@@ -36,7 +36,8 @@ int main() {
     Sampler_stopSampling();
 
     return 0;
-}*/
+}
+*/
 
 #include "sampler.h"
 #include "sample_analysis.h"
@@ -45,27 +46,22 @@ int main() {
 #include <unistd.h>  // For sleep
 
 int main() {
-    // Initialize the sampler
-    Sampler_startSampling();  // Assuming this function exists in your sampler module
+    // Initialize and start the sampling and analysis threads
+    Sampler_startSampling();
+    resetSampleAnalysis();
 
-    // Initialize the sample analysis
-    init_sample_analysis();
-
-    // Allow some time for sampling and analysis
-    // This will give time for the sampling and analysis threads to run
+    // Let the sampler and analyzer run for a test duration (e.g., 10 seconds)
     printf("Sampling and analyzing for 10 seconds...\n");
     sleep(10);
 
-
-    // Cleanup the sample analysis
+    // Stop the sampling and analysis processes
+    Sampler_stopSampling();
     cleanup_sample_analysis();
 
-    // Stop the sampler
-    Sampler_stopSampling();  // Assuming this function exists in your sampler module
-
-    printf("Sampling and analysis completed.\n");
+    // Print the analysis results
+    printf("Analysis Results:\n");
+    printSampleAnalysis();
 
     return 0;
 }
-
 
