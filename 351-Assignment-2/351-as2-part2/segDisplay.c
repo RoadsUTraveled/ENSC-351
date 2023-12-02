@@ -196,36 +196,35 @@ void* displayThreadFunc(void* arg) {
     
     while (displayThreadRunning) {
         // Turn off both digits
-        gpioWrite(61, 0);
-        gpioWrite(44, 0);
+        //gpioWrite(61, 0);
+        //gpioWrite(44, 0);
         
         // Display pattern for left digit
         displayDigit(i2cFileDesc, leftPattern);
 
         // Turn on left digit
-        gpioWrite(61, 1);
+        //gpioWrite(61, 1);
         sleepForMs(5); // 5ms delay
 
         // Turn off both digits again
-        gpioWrite(61, 0);
-        gpioWrite(44, 0);
+        //gpioWrite(61, 0);
+        //gpioWrite(44, 0);
 
         // Display pattern for right digit
         displayDigit(i2cFileDesc, rightPattern); 
 
         // Turn on right digit
-        gpioWrite(44, 1);
+        //gpioWrite(44, 1);
         
         sleepForMs(5); // 5ms delay
         displayDigit(i2cFileDesc, dot);  // Will display dot or blank
     }
-
     // Turn off the display before exiting the thread
     displayDigit(i2cFileDesc, blankPattern);
-    gpioWrite(61, 0);
-    gpioWrite(44, 0);
-    runCommand("echo 61 > /sys/class/gpio/unexport");
-    runCommand("echo 44 > /sys/class/gpio/unexport");
+    //gpioWrite(61, 0);
+    //gpioWrite(44, 0);
+    //runCommand("echo 61 > /sys/class/gpio/unexport");
+    //srunCommand("echo 44 > /sys/class/gpio/unexport");
     return NULL;
 }
 
@@ -324,6 +323,7 @@ int ledInitialize() {
     runCommand("config-pin P9_18 i2c");
     runCommand("config-pin P9_17 i2c");
     
+    /*
     runCommand("config-pin p8.26 gpio");
     runCommand("config-pin p8.12 gpio");
 
@@ -337,7 +337,7 @@ int ledInitialize() {
     runCommand("echo 44 > /sys/class/gpio/export");
     sleep(1);
     runCommand("echo out > /sys/class/gpio/gpio44/direction");
-
+    */
     printf("Drive display (assumes GPIO #61 and #44 are output and 1)\n");
 
     // Initialize the I2C bus
