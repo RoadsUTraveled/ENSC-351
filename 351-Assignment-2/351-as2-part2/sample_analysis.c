@@ -250,4 +250,12 @@ double getMaxInterval(void) {
     return maxInterval;
 }
 
+int getNumDips(void) {
+    pthread_mutex_lock(&sampleAnalysisMutex);
+    int numDips = sampleAnalysis.numDips;
+    pthread_mutex_unlock(&sampleAnalysisMutex);
+    return numDips;
+}
+
+
 

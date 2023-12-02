@@ -111,7 +111,7 @@ void displayDigit(int i2cFileDesc, DigitPattern digit) {
         writeI2cReg(i2cFileDesc, digit.patterns[i].regAddr, digit.patterns[i].value);
     }
 }
-
+/*
 void gpioWrite(int gpio, int value) {
     char path[35];
     int fd;
@@ -139,7 +139,7 @@ void gpioWrite(int gpio, int value) {
 
     // Close the file
     close(fd);
-}
+}*/
 void setDisplayPatterns(double number, DigitPattern *leftDigit, DigitPattern *rightDigit, DigitPattern *dot) {
     DigitPattern digitPatternsR[10] = {zeroPatternR, onePatternR, twoPatternR, threePatternR, fourPatternR, fivePatternR, sixPatternR, sevenPatternR, eightPatternR, ninePatternR};
     DigitPattern digitPatternsL[10] = {zeroPatternL, onePatternL, twoPatternL, threePatternL, fourPatternL, fivePatternL, sixPatternL, sevenPatternL, eightPatternL, ninePatternL};

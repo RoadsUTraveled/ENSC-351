@@ -36,22 +36,23 @@ int main() {
         printf("Reading: %d, Voltage: %f\n", reading, voltage);
     }*/
 
+    /*
     Sampler_startSampling();
     resetSampleAnalysis();
     //LED test
-    int i2cFileDesc = ledOpen(9.8);
+    double joyX, joyY;
+    Joystick_readXY(&joyX, &joyY);
+    joystick_display(joyX, joyY);
   
     //user button 
-    controlButtonMonitorThread();
-    close(i2cFileDesc);
+    controlButtonMonitorThread();*/
     printf("Program exiting smoothly.\n");
-    /**********************test for joystick******************/
 
-    // while (true) {
-    //     double x, y;
-    //     Joystick_readXY(&x, &y);
-    //     printf("x: %f, y: %f\n", x, y);
-    // }
+    while (true) {
+        double x, y;
+        Joystick_readXY(&x, &y);
+        printf("x: %f, y: %f\n", x, y);
+    }
 
    
     return 0;

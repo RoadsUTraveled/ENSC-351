@@ -7,7 +7,7 @@
 static const double A2D_VOLTAGE_REF_V = 1.8;
 static const int A2D_MAX_READING = 4095;
 
-int getVoltageReading(int channel) {
+int getVoltageReading_A2D(int channel) {
     char filePath[80];
     snprintf(filePath, sizeof(filePath), ADC_PATH, channel);
 
@@ -28,7 +28,7 @@ int getVoltageReading(int channel) {
     return a2dReading;
 }
 
-double getVoltage(int channel) {
+double getVoltage_A2D(int channel) {
     double a2dReading = getVoltageReading(channel);
     double voltage = a2dReading * A2D_VOLTAGE_REF_V / A2D_MAX_READING;
     return voltage;
