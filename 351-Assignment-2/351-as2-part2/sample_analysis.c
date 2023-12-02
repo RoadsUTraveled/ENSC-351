@@ -221,3 +221,33 @@ void printSampleAnalysis(void)
     pthread_mutex_unlock(&sampleAnalysisMutex);
 }
 
+// Getters for the sample analysis
+double getMinVoltage(void) {
+    pthread_mutex_lock(&sampleAnalysisMutex);
+    double minVoltage = sampleAnalysis.minVoltage;
+    pthread_mutex_unlock(&sampleAnalysisMutex);
+    return minVoltage;
+}
+
+double getMaxVoltage(void) {
+    pthread_mutex_lock(&sampleAnalysisMutex);
+    double maxVoltage = sampleAnalysis.maxVoltage;
+    pthread_mutex_unlock(&sampleAnalysisMutex);
+    return maxVoltage;
+}
+
+double getMinInterval(void) {
+    pthread_mutex_lock(&sampleAnalysisMutex);
+    double minInterval = sampleAnalysis.minInterval;
+    pthread_mutex_unlock(&sampleAnalysisMutex);
+    return minInterval;
+}
+
+double getMaxInterval(void) {
+    pthread_mutex_lock(&sampleAnalysisMutex);
+    double maxInterval = sampleAnalysis.maxInterval;
+    pthread_mutex_unlock(&sampleAnalysisMutex);
+    return maxInterval;
+}
+
+
