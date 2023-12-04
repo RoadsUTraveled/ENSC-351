@@ -8,11 +8,11 @@
 #ifndef CARTMOVE_H
 #define CARTMOVE_H
 
-void initMotorDriver();
-void moveForward();
-void moveBackward();
-void turnLeft();
-void turnRight();
-void clearMotorDriver();
+void initMotorDriver(void);
+void moveForward(void);
+void moveBackward(void);
+void turnLeft(void);
+void turnRight(void);
+void clearMotorDriver(void);
 
 #endif // CARTMOVE_H
