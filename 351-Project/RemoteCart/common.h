@@ -6,14 +6,10 @@
 #ifndef COMMON_H
 #define COMMON_H
 
-#define GPIO_EXPORT "/sys/class/gpio/export"
-#define GPIO_UNEXPORT "/sys/class/gpio/unexport"
-#define GPIO_DIRECTION "/sys/class/gpio/gpio%d/direction"
-#define GPIO_VALUE "/sys/class/gpio/gpio%d/value"
-
-void exportGPIO(int gpio);
-void unexportGPIO(int gpio);
-void setGPIO_Direction(int gpio, char* direction);
-void setGPIO_Value(int gpio, int value);
+void runCommand(const char *command);
+void exportGPIO(const int pin);
+void unexportGPIO(const int pin);
+void setGPIODirection(const int pin, const char *direction);
+void writeGPIO(const int pin, const int value);
 
 #endif // COMMON_H

@@ -3,69 +3,77 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include <sys/types.h>
 
-#define IN1 62
-#define IN2 36
-#define IN3 32
-#define IN4 86
+#define IN1 66
+#define IN2 67
+#define IN3 69
+#define IN4 68
 
 void initMotorDriver()
 {
-    // Export GPIO pins and set them as outputs
+    printf("Exporting GPIO pins...\n");
+    // Export GPIO pins
     exportGPIO(IN1);
     exportGPIO(IN2);
     exportGPIO(IN3);
     exportGPIO(IN4);
+    printf("GPIO pins exported.\n");
 
-    setGPIO_Direction(IN1, "out");
-    setGPIO_Direction(IN2, "out");
-    setGPIO_Direction(IN3, "out");
-    setGPIO_Direction(IN4, "out");
+    sleep(1); // Wait for 1 second
+
+    printf("Setting GPIO direction...\n");
+
+    // Set GPIO direction
+    setGPIODirection(IN1, "out");
+    setGPIODirection(IN2, "out");
+    setGPIODirection(IN3, "out");
+    setGPIODirection(IN4, "out");
 }
 
 void moveForward()
 {
-    // Move forward
-    setGPIO_Value(IN1, 1);
-    setGPIO_Value(IN2, 0);
-    setGPIO_Value(IN3, 1);
-    setGPIO_Value(IN4, 0);
+    writeGPIO(IN1, 1);
+    writeGPIO(IN2, 0);
+    writeGPIO(IN3, 1);
+    writeGPIO(IN4, 0);
 }
 
 void moveBackward()
 {
-    // Move backward
-    setGPIO_Value(IN1, 0);
-    setGPIO_Value(IN2, 1);
-    setGPIO_Value(IN3, 0);
-    setGPIO_Value(IN4, 1);
+    writeGPIO(IN1, 0);
+    writeGPIO(IN2, 1);
+    writeGPIO(IN3, 0);
+    writeGPIO(IN4, 1);
 }
 
 void turnLeft()
 {
-    // Turn left
-    setGPIO_Value(IN1, 0);
-    setGPIO_Value(IN2, 1);
-    setGPIO_Value(IN3, 1);
-    setGPIO_Value(IN4, 0);
+    writeGPIO(IN1, 0);
+    writeGPIO(IN2, 1);
+    writeGPIO(IN3, 1);
+    writeGPIO(IN4, 0);
 }
 
 void turnRight()
 {
-    // Turn right
-    setGPIO_Value(IN1, 1);
-    setGPIO_Value(IN2, 0);
-    setGPIO_Value(IN3, 0);
-    setGPIO_Value(IN4, 1);
+    writeGPIO(IN1, 1);
+    writeGPIO(IN2, 0);
+    writeGPIO(IN3, 0);
+    writeGPIO(IN4, 1);
 }
 
 void clearMotorDriver()
 {
     // Clear motor driver
-    setGPIO_Value(IN1, 0);
-    setGPIO_Value(IN2, 0);
-    setGPIO_Value(IN3, 0);
-    setGPIO_Value(IN4, 0);
+    writeGPIO(IN1, 0);
+    writeGPIO(IN2, 0);
+    writeGPIO(IN3, 0);
+    writeGPIO(IN4, 0);
 
     unexportGPIO(IN1);
     unexportGPIO(IN2);

@@ -10,86 +10,50 @@
 
 // Path: common.h
 
-void exportGPIO(int gpio)
+// run a Linux command from in your C program
+void runCommand(const char *command)
 {
-    int fd = open(GPIO_EXPORT, O_WRONLY);
-    if (fd == -1)
+    // Execute the shell command (output into pipe)
+    FILE *pipe = popen(command, "r");
+    // Ignore output of the command; but consume it
+    // so we don't get an error when closing the pipe.
+    char buffer[1024];
+    while (!feof(pipe) && !ferror(pipe))
     {
-        perror("Unable to open /sys/class/gpio/export");
-        exit(1);
+        if (fgets(buffer, sizeof(buffer), pipe) == NULL)
+            break;
+        // printf("--> %s", buffer); // Uncomment for debugging
     }
-
-    char buffer[3];
-    sprintf(buffer, "%d", gpio);
-    if (write(fd, buffer, strlen(buffer)) != strlen(buffer))
+    // Get the exit code from the pipe; non-zero is an error:
+    int exitCode = WEXITSTATUS(pclose(pipe));
+    if (exitCode != 0)
     {
-        perror("Error writing to /sys/class/gpio/export");
-        exit(1);
+        perror("Unable to execute command:");
+        printf(" command: %s\n", command);
+        printf(" exit code: %d\n", exitCode);
     }
-
-    close(fd);
 }
 
-void unexportGPIO(int gpio)
-{
-    int fd = open(GPIO_UNEXPORT, O_WRONLY);
-    if (fd == -1)
-    {
-        perror("Unable to open /sys/class/gpio/unexport");
-        exit(1);
-    }
-
-    char buffer[3];
-    sprintf(buffer, "%d", gpio);
-    if (write(fd, buffer, strlen(buffer)) != strlen(buffer))
-    {
-        perror("Error writing to /sys/class/gpio/unexport");
-        exit(1);
-    }
-
-    close(fd);
+void exportGPIO(const int pin) {
+    char command[50];
+    sprintf(command, "echo %d > /sys/class/gpio/export", pin);
+    runCommand(command);
 }
 
-void setGPIO_Direction(int gpio, char *direction)
-{
-    char path[35];
-    sprintf(path, GPIO_DIRECTION, gpio);
-
-    int fd = open(path, O_WRONLY);
-    if (fd == -1)
-    {
-        perror("Unable to open GPIO direction file");
-        exit(1);
-    }
-
-    if (write(fd, direction, strlen(direction)) != strlen(direction))
-    {
-        perror("Error writing to GPIO direction file");
-        exit(1);
-    }
-
-    close(fd);
+void unexportGPIO(const int pin) {
+    char command[50];
+    sprintf(command, "echo %d > /sys/class/gpio/unexport", pin);
+    runCommand(command);
 }
 
-void setGPIO_Value(int gpio, int value)
-{
-    char path[30];
-    sprintf(path, GPIO_VALUE, gpio);
+void setGPIODirection(const int pin, const char *direction) {
+    char command[80];
+    sprintf(command, "echo %s > /sys/class/gpio/gpio%d/direction", direction, pin);
+    runCommand(command);
+}
 
-    int fd = open(path, O_WRONLY);
-    if (fd == -1)
-    {
-        perror("Unable to open GPIO value file");
-        exit(1);
-    }
-
-    char buffer[2];
-    sprintf(buffer, "%d", value);
-    if (write(fd, buffer, 1) != 1)
-    {
-        perror("Error writing to GPIO value file");
-        exit(1);
-    }
-
-    close(fd);
+void writeGPIO(const int pin, const int value) {
+    char command[80];
+    sprintf(command, "echo %d > /sys/class/gpio/gpio%d/value", value, pin);
+    runCommand(command);
 }
