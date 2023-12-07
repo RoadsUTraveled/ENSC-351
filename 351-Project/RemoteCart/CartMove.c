@@ -9,74 +9,96 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-#define IN1 66
-#define IN2 67
-#define IN3 69
-#define IN4 68
+static void moveForward()
+{
+    writeGPIO(OUT1, 1);
+    writeGPIO(OUT2, 0);
+    writeGPIO(OUT3, 1);
+    writeGPIO(OUT4, 0);
+}
+
+static void moveBackward()
+{
+    writeGPIO(OUT1, 0);
+    writeGPIO(OUT2, 1);
+    writeGPIO(OUT3, 0);
+    writeGPIO(OUT4, 1);
+}
+
+static void turnLeft()
+{
+    writeGPIO(OUT1, 0);
+    writeGPIO(OUT2, 1);
+    writeGPIO(OUT3, 1);
+    writeGPIO(OUT4, 0);
+}
+
+static void turnRight()
+{
+    writeGPIO(OUT1, 1);
+    writeGPIO(OUT2, 0);
+    writeGPIO(OUT3, 0);
+    writeGPIO(OUT4, 1);
+}
 
 void initMotorDriver()
 {
-    printf("Exporting GPIO pins...\n");
+    //printf("Exporting GPIO pins...\n");
     // Export GPIO pins
+    exportGPIO(OUT1);
+    exportGPIO(OUT2);
+    exportGPIO(OUT3);
+    exportGPIO(OUT4);
     exportGPIO(IN1);
     exportGPIO(IN2);
-    exportGPIO(IN3);
-    exportGPIO(IN4);
-    printf("GPIO pins exported.\n");
-
-    sleep(1); // Wait for 1 second
-
-    printf("Setting GPIO direction...\n");
-
+    //Comment for debugg
+    //printf("GPIO pins exported.\n");
+    //sleep(1); // Wait for 1 second
+    //printf("Setting GPIO direction...\n");
+    
     // Set GPIO direction
-    setGPIODirection(IN1, "out");
-    setGPIODirection(IN2, "out");
-    setGPIODirection(IN3, "out");
-    setGPIODirection(IN4, "out");
+    setGPIODirection(OUT1, "out");
+    setGPIODirection(OUT2, "out");
+    setGPIODirection(OUT3, "out");
+    setGPIODirection(OUT4, "out");
+    setGPIODirection(IN1, "in");
+    setGPIODirection(IN2, "in");
 }
 
-void moveForward()
+void cartMovement(int ESP32_IN1, int ESP32_IN2)
 {
-    writeGPIO(IN1, 1);
-    writeGPIO(IN2, 0);
-    writeGPIO(IN3, 1);
-    writeGPIO(IN4, 0);
-}
-
-void moveBackward()
-{
-    writeGPIO(IN1, 0);
-    writeGPIO(IN2, 1);
-    writeGPIO(IN3, 0);
-    writeGPIO(IN4, 1);
-}
-
-void turnLeft()
-{
-    writeGPIO(IN1, 0);
-    writeGPIO(IN2, 1);
-    writeGPIO(IN3, 1);
-    writeGPIO(IN4, 0);
-}
-
-void turnRight()
-{
-    writeGPIO(IN1, 1);
-    writeGPIO(IN2, 0);
-    writeGPIO(IN3, 0);
-    writeGPIO(IN4, 1);
+    //printf("Setting GPIO value...\n");
+    // Set GPIO value
+    if (ESP32_IN1 == 0 && ESP32_IN2 == 0)
+    {
+        moveForward();
+    }
+    else if (ESP32_IN1 == 1 && ESP32_IN2 == 1)
+    {
+        moveBackward();
+    }
+    else if (ESP32_IN1 == 1 && ESP32_IN2 == 0)
+    {
+        turnLeft();
+    }
+    else if (ESP32_IN1 == 0 && ESP32_IN2 == 1)
+    {
+        turnRight();
+    }
 }
 
 void clearMotorDriver()
 {
     // Clear motor driver
-    writeGPIO(IN1, 0);
-    writeGPIO(IN2, 0);
-    writeGPIO(IN3, 0);
-    writeGPIO(IN4, 0);
+    writeGPIO(OUT1, 0);
+    writeGPIO(OUT2, 0);
+    writeGPIO(OUT3, 0);
+    writeGPIO(OUT4, 0);
 
+    unexportGPIO(OUT1);
+    unexportGPIO(OUT2);
+    unexportGPIO(OUT3);
+    unexportGPIO(OUT4);
     unexportGPIO(IN1);
     unexportGPIO(IN2);
-    unexportGPIO(IN3);
-    unexportGPIO(IN4);
 }

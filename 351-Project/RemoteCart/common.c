@@ -57,3 +57,20 @@ void writeGPIO(const int pin, const int value) {
     sprintf(command, "echo %d > /sys/class/gpio/gpio%d/value", value, pin);
     runCommand(command);
 }
+
+int readGPIO(const int pin, int *value) {
+    char path[50];
+    sprintf(path, "/sys/class/gpio/gpio%d/value", pin);
+    FILE *fp = fopen(path, "r");
+    if (fp == NULL) {
+        perror("Error opening GPIO value file");
+        return -1;
+    }
+
+    char valueStr[3];
+    fgets(valueStr, sizeof(valueStr), fp);
+    fclose(fp);
+
+    *value = atoi(valueStr);
+    return 0;
+}
