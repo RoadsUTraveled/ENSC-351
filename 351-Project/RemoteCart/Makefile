@@ -2,7 +2,7 @@ CC = arm-linux-gnueabihf-gcc
 CFLAGS = -Wall -g -std=c99 -D _POSIX_C_SOURCE=200809L -Werror
 LIBS = -lpthread -lm
 TARGET = carttest
-SRCS = common.c CartMove.c main.c
+SRCS = common.c CartMove.c main.c segDisplay.c
 OBJS = $(SRCS:.c=.o)
 
 .PHONY: all clean

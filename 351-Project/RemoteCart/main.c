@@ -9,11 +9,13 @@
 // Inclue header files here
 #include "common.h"
 #include "CartMove.h"
+#include "segDisplay.h"
 
 int main()
 {
     /************************ TEST CODE FOR CartMove ************************/
     initMotorDriver();
+    int i2cFileDesc = ledInitialize();
     //sleep(10);
     int ControlSignal = 0;
     while(ControlSignal == 0)
@@ -41,11 +43,15 @@ int main()
         printf("ESP32_IN1 = %d\n", ESP32_IN1);
         printf("ESP32_IN2 = %d\n", ESP32_IN2);
         printf("value = %d\n", ControlSignal);
+        displayPatternBasedOnInput(i2cFileDesc, ESP32_IN1, ESP32_IN2);   
             // Move the cart
-        cartMovement(ESP32_IN1, ESP32_IN2);    
+        cartMovement(ESP32_IN1, ESP32_IN2);
+         
     }
     // Clear the motor driver
     clearMotorDriver();
+    cleanLed(i2cFileDesc);
+    close(i2cFileDesc);
     printf("clean finish\n");
     printf("value = %d\n", ControlSignal);
     /************************ END OF TEST CODE FOR CartMove ************************/
