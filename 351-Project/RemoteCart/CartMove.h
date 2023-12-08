@@ -15,6 +15,7 @@
 
 void initMotorDriver(void);
 void cartMovement(int ESP32_IN1, int ESP32_IN2);
+void carstop();
 void clearMotorDriver(void);
 
 #endif // CARTMOVE_H

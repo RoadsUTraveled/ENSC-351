@@ -9,7 +9,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 
-static void moveForward()
+void moveForward()
 {
     writeGPIO(OUT1, 1);
     writeGPIO(OUT2, 0);
@@ -17,7 +17,7 @@ static void moveForward()
     writeGPIO(OUT4, 0);
 }
 
-static void moveBackward()
+void moveBackward()
 {
     writeGPIO(OUT1, 0);
     writeGPIO(OUT2, 1);
@@ -25,7 +25,7 @@ static void moveBackward()
     writeGPIO(OUT4, 1);
 }
 
-static void turnLeft()
+void turnLeft()
 {
     writeGPIO(OUT1, 0);
     writeGPIO(OUT2, 1);
@@ -33,7 +33,7 @@ static void turnLeft()
     writeGPIO(OUT4, 0);
 }
 
-static void turnRight()
+void turnRight()
 {
     writeGPIO(OUT1, 1);
     writeGPIO(OUT2, 0);
@@ -41,6 +41,12 @@ static void turnRight()
     writeGPIO(OUT4, 1);
 }
 
+void stop(){
+    writeGPIO(OUT1, 0);
+    writeGPIO(OUT2, 0);
+    writeGPIO(OUT3, 0);
+    writeGPIO(OUT4, 0);
+}
 void initMotorDriver()
 {
     //printf("Exporting GPIO pins...\n");
@@ -51,18 +57,20 @@ void initMotorDriver()
     exportGPIO(OUT4);
     exportGPIO(IN1);
     exportGPIO(IN2);
+    exportGPIO(45);
     //Comment for debugg
     //printf("GPIO pins exported.\n");
-    //sleep(1); // Wait for 1 second
+    sleep(1); // Wait for 1 second
     //printf("Setting GPIO direction...\n");
     
     // Set GPIO direction
-    setGPIODirection(OUT1, "out");
-    setGPIODirection(OUT2, "out");
-    setGPIODirection(OUT3, "out");
-    setGPIODirection(OUT4, "out");
-    setGPIODirection(IN1, "in");
-    setGPIODirection(IN2, "in");
+     setGPIODirection(OUT1, "out");
+     setGPIODirection(OUT2, "out");
+     setGPIODirection(OUT3, "out");
+     setGPIODirection(OUT4, "out");
+     setGPIODirection(IN1, "in");
+     setGPIODirection(IN2, "in");
+     setGPIODirection(45, "in");
 }
 
 void cartMovement(int ESP32_IN1, int ESP32_IN2)
@@ -86,6 +94,9 @@ void cartMovement(int ESP32_IN1, int ESP32_IN2)
         turnRight();
     }
 }
+void carstop(){
+    stop();
+}
 
 void clearMotorDriver()
 {
@@ -94,11 +105,14 @@ void clearMotorDriver()
     writeGPIO(OUT2, 0);
     writeGPIO(OUT3, 0);
     writeGPIO(OUT4, 0);
-
+    setGPIODirection(45,"out");
+    sleep(1);
+    writeGPIO(45, 0);
     unexportGPIO(OUT1);
     unexportGPIO(OUT2);
     unexportGPIO(OUT3);
     unexportGPIO(OUT4);
     unexportGPIO(IN1);
     unexportGPIO(IN2);
+    unexportGPIO(45);
 }

@@ -12,25 +12,42 @@
 
 int main()
 {
-/************************ TEST CODE FOR CartMove ************************/
-    // Initialize the motor driver
+    /************************ TEST CODE FOR CartMove ************************/
     initMotorDriver();
+    //sleep(10);
+    int ControlSignal = 0;
+    while(ControlSignal == 0)
+    {
+        readGPIO(45, &ControlSignal);
+        printf("value = %d\n", ControlSignal);
+    }
+    
+    // Initialize the motor driver
+    
+    while (1)
+    {
+        printf("value = %d\n", ControlSignal);
+        readGPIO(45, &ControlSignal);
 
-    // Read the control signal from ESP32
-    int ESP32_IN1 = 0;
-    int ESP32_IN2 = 0;
-    readGPIO(IN1, &ESP32_IN1);
-    readGPIO(IN2, &ESP32_IN2);
-
-    // Comment for debug
-    printf("ESP32_IN1 = %d\n", ESP32_IN1);
-    printf("ESP32_IN2 = %d\n", ESP32_IN2);
-
-    // Move the cart
-    cartMovement(ESP32_IN1, ESP32_IN2);
-
+        if (ControlSignal == 0)
+            break;
+        // Read the control signal from ESP32
+        int ESP32_IN1 = 0;
+        int ESP32_IN2 = 0;
+        readGPIO(IN1, &ESP32_IN1);
+        readGPIO(IN2, &ESP32_IN2);
+        
+        // Comment for debug
+        printf("ESP32_IN1 = %d\n", ESP32_IN1);
+        printf("ESP32_IN2 = %d\n", ESP32_IN2);
+        printf("value = %d\n", ControlSignal);
+            // Move the cart
+        cartMovement(ESP32_IN1, ESP32_IN2);    
+    }
     // Clear the motor driver
     clearMotorDriver();
-/************************ END OF TEST CODE FOR CartMove ************************/
+    printf("clean finish\n");
+    printf("value = %d\n", ControlSignal);
+    /************************ END OF TEST CODE FOR CartMove ************************/
     return 0;
 }
