@@ -17,6 +17,7 @@ int main()
     initMotorDriver();
     int i2cFileDesc = ledInitialize();
     //sleep(10);
+    
     int ControlSignal = 0;
     while(ControlSignal == 0)
     {
@@ -54,6 +55,12 @@ int main()
     close(i2cFileDesc);
     printf("clean finish\n");
     printf("value = %d\n", ControlSignal);
-    /************************ END OF TEST CODE FOR CartMove ************************/
+    
+
+   /*
+    displayPatternBasedOnInput(i2cFileDesc, 0, 1);
+    sleep(5);
+    cleanLed(i2cFileDesc);
+    close(i2cFileDesc);*/
     return 0;
 }
