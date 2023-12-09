@@ -105,9 +105,9 @@ void clearMotorDriver()
     writeGPIO(OUT2, 0);
     writeGPIO(OUT3, 0);
     writeGPIO(OUT4, 0);
-    setGPIODirection(45,"out");
-    sleep(1);
-    writeGPIO(45, 0);
+    // setGPIODirection(45,"out");
+    // sleep(1);
+    // writeGPIO(45, 0);
     unexportGPIO(OUT1);
     unexportGPIO(OUT2);
     unexportGPIO(OUT3);

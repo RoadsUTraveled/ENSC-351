@@ -109,9 +109,9 @@ int ledInitialize() {
 
 void displayPatternBasedOnInput(int i2cFileDesc, int input1, int input2) {
     if (input1 == 0 && input2 == 0) {
-        displayDigit(i2cFileDesc, upPattern);
-    } else if (input1 == 1 && input2 == 1) {
         displayDigit(i2cFileDesc, downPattern);
+    } else if (input1 == 1 && input2 == 1) {
+        displayDigit(i2cFileDesc, upPattern);
     } else if (input1 == 1 && input2 == 0) {
         displayDigit(i2cFileDesc, leftPattern);
     } else if (input1 == 0 && input2 == 1) {
